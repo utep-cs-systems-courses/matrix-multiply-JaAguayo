@@ -2,6 +2,7 @@
 import argparse
 import numpy as np
 
+
 def genMatrix(size=1024, value=1):
     """
     Generates a 2d square matrix of the specified size with the specified values
