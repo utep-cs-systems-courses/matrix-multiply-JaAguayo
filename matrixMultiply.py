@@ -47,6 +47,11 @@ if __name__ == '__main__':
     result = matrixMulti(matrix1,matrix2)
     print(result)
 
+    matrix1 = genMatrix(500,5)
+    matrix2 = genMatrix(500,3)
+
+    result = matrixMulti(matrix1, matrix2)
+    print(result)
 
 
 
