@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 from matrixUtils import *
+import timeit
 
 #multiplies the 2 matrices by using for loops
 def matrixMulti(matrix1,matrix2):
 
     multi_result = createResultList(matrix1,matrix2)
 
+    start_time = timeit.default_timer()
     #rows of matrix 1
     for i in range(len(matrix1)): 
         #columns of matrix 2
@@ -13,6 +15,8 @@ def matrixMulti(matrix1,matrix2):
             #rows of matrix 2
             for k in range(len(matrix2)): 
                 multi_result[i][j] += matrix1[i][k] * matrix2[k][j]
+    elasped_time = timeit.default_timer()-start_time
+    print("Time to compute" , elasped_time)
     
     return multi_result
 
@@ -37,22 +41,26 @@ def createResultList(matrix1,matrix2):
     
     return rows
 
+def test():
+    return 
+
+
 if __name__ == '__main__':
     matrix1 = readFromFile("matrix1.txt")
-    print(matrix1)
 
     matrix2 = readFromFile("matrix2.txt")
-    print(len(matrix2[0]))
 
     result = matrixMulti(matrix1,matrix2)
-    print(result)
+    for r in result:
+        print(r)
 
-    matrix1 = genMatrix(500,5)
-    matrix2 = genMatrix(500,3)
+    """
+    matrix1 = genMatrix(250,5)
+    matrix2 = genMatrix(250,3)
 
     result = matrixMulti(matrix1, matrix2)
     print(result)
 
-
+    """
 
 
