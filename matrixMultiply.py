@@ -16,9 +16,26 @@ def matrixMulti(matrix1,matrix2):
             for k in range(len(matrix2)): 
                 multi_result[i][j] += matrix1[i][k] * matrix2[k][j]
     elasped_time = timeit.default_timer()-start_time
-    print("Time to compute" , elasped_time)
+    format_time = '{:.10f}'.format(elasped_time)
     
-    return multi_result
+    return multi_result,format_time
+
+#New algorithm to multiply two matrices 
+def matrixMultiBlocked(matrix1, matrix2):
+    tile_size = 16 
+    output = createResultList(matrix1, matrix2)
+
+    for kk in range (0,len(matrix1),tile_size):
+        for jj in range(0,len(matrix1),tile_size):
+            for i in range (0,len(matrix1)):
+                j_end_val = jj + tile_size
+                for j in range(0,jj,j_end_val):
+                    k_end_val = kk + tile_size
+                    sum = output[i][j]
+                    for k in range(0,kk,k_end_val):
+                        sum = sum + matrix1[i][k] * matrix2[k][j]
+                    output[i][j] = sum
+                    print(output)
 
 #Creates a list of the correct dimensions of the final product and fills with 0s
 def createResultList(matrix1,matrix2):
@@ -41,25 +58,37 @@ def createResultList(matrix1,matrix2):
     
     return rows
 
+#test fucntion to run some multiplies 
 def test():
-    return 
-
-
-if __name__ == '__main__':
     matrix1 = readFromFile("matrix1.txt")
 
     matrix2 = readFromFile("matrix2.txt")
 
-    result = matrixMulti(matrix1,matrix2)
+    result,comp_time = matrixMulti(matrix1,matrix2)
     for r in result:
         print(r)
+    print("Time to compute: Test 1 (two small matrices from file)", comp_time)
 
+    matrix1 = genMatrix(600,5)
+    matrix2 = genMatrix(600,3)
+
+    result,comp_time = matrixMulti(matrix1, matrix2)   
+    print("Time to compute: Test 2 (Large matrices size 600, values 5 and 3)", comp_time)
+
+    matrix1 = genMatrix(500,5)
+    matrix2 = genMatrix(500,7)
+
+    result,comp_time = matrixMulti(matrix1, matrix2)
+    print("Time to compute: Test 3 (Lared matrices size 500, values 5 and 7)", comp_time)
+
+
+if __name__ == '__main__':
+    test()
     """
-    matrix1 = genMatrix(250,5)
-    matrix2 = genMatrix(250,3)
+    matrix1 = genMatrix(20,5)
+    matrix2 = genMatrix(20,7)
 
-    result = matrixMulti(matrix1, matrix2)
-    print(result)
+    matrixMultiBlocked(matrix1,matrix2)
 
     """
 
