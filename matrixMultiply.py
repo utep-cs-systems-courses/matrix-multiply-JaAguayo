@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 from matrixUtils import *
-import timeit
+import time
 
 #multiplies the 2 matrices by using for loops
 def matrixMulti(matrix1,matrix2):
 
-    multi_result = createResultList(matrix1,matrix2)
+    #sets of the result matrix
+    multi_result = genMatrix(len(matrix1),0)
 
-    start_time = timeit.default_timer()
+    #timing algorithm
+    start_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)
     #rows of matrix 1
     for i in range(len(matrix1)): 
         #columns of matrix 2
@@ -15,48 +17,37 @@ def matrixMulti(matrix1,matrix2):
             #rows of matrix 2
             for k in range(len(matrix2)): 
                 multi_result[i][j] += matrix1[i][k] * matrix2[k][j]
-    elasped_time = timeit.default_timer()-start_time
-    format_time = '{:.10f}'.format(elasped_time)
     
+    elasped_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)-start_time
+    format_time = '{:.10f}'.format(elasped_time)
+
+    #return the result of matrix and time it took to compute
     return multi_result,format_time
 
 #New algorithm to multiply two matrices 
 def matrixMultiBlocked(matrix1, matrix2):
-    tile_size = 16 
-    output = createResultList(matrix1, matrix2)
+    tile_size = 16
+    #set of result matrix
+    output = genMatrix(len(matrix1),0)
 
+    #getting time to compute
+    start_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)
     for kk in range (0,len(matrix1),tile_size):
         for jj in range(0,len(matrix1),tile_size):
-            for i in range (0,len(matrix1)):
+            for i in range (len(matrix1)):
                 j_end_val = jj + tile_size
                 for j in range(0,jj,j_end_val):
                     k_end_val = kk + tile_size
                     sum = output[i][j]
                     for k in range(0,kk,k_end_val):
                         sum = sum + matrix1[i][k] * matrix2[k][j]
-                    output[i][j] = sum
-                    print(output)
+                        output[i][j] = sum
+                        
+    elasped_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)-start_time
+    format_time = '{:.10f}'.format(elasped_time)
 
-#Creates a list of the correct dimensions of the final product and fills with 0s
-def createResultList(matrix1,matrix2):
-    rows=[]
-    if (len(matrix1) >= len(matrix2)):
-        row = len(matrix1)
-    else:
-        row = len(matrix2)
-    
-    if (len(matrix1[0]) >= len(matrix2[0])):
-        col = len(matrix1[0])
-    else:
-        col = len(matrix2[0])
-
-    for x in range(0,row):
-        columns = []
-        for y in range (0,col):
-            columns.append(0)
-        rows.append(columns)
-    
-    return rows
+    #return matrix and time it took to compute 
+    return output,format_time
 
 #test fucntion to run some multiplies 
 def test():
@@ -79,17 +70,19 @@ def test():
     matrix2 = genMatrix(500,7)
 
     result,comp_time = matrixMulti(matrix1, matrix2)
-    print("Time to compute: Test 3 (Lared matrices size 500, values 5 and 7)", comp_time)
+    print("Time to compute: Test 3 (Large matrices size 500, values 5 and 7)", comp_time)
 
-
-if __name__ == '__main__':
-    test()
-    """
     matrix1 = genMatrix(20,5)
     matrix2 = genMatrix(20,7)
 
-    matrixMultiBlocked(matrix1,matrix2)
+    result, comp_time = matrixMultiBlocked(matrix1,matrix2)
+    for r in result:
+        print(r)
+    print("Time to compute: Test 4 (Large matrices size 20, values 5 and 7)", comp_time)
+    
+if __name__ == '__main__':
+    test()
 
-    """
+    
 
 
