@@ -3,32 +3,7 @@ from matrixUtils import *
 import time
 import pymp
 
-#multiplies the 2 matrices by using for loops using Parallel
-def matrixMultiParallel(matrix1,matrix2):
-    
-    #sets of the result matrix
-    multi_result = genMatrix(len(matrix1),0)
-    shared_multi_result = pymp.shared.list(multi_result)
-    
-    with pymp.Parallel() as p:
-        matrix_lock = p.lock
-        #timing algorithm
-        start_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)
-        #rows of matrix 1
-        for i in p.range(len(matrix1)): 
-            #columns of matrix 2
-            for j in range(len(matrix2[0])): 
-                #rows of matrix 2
-                for k in range(len(matrix2)):
-                    #matrix_lock.acquire()
-                    shared_multi_result[i][j] = shared_multi_result[i][j] +  matrix1[i][k] * matrix2[k][j]
-                    #matrix_lock.release()
-    
-        elasped_time = time.clock_gettime(time.CLOCK_MONOTONIC_RAW)-start_time
-        format_time = '{:.10f}'.format(elasped_time)
-
-    #return the result of matrix and time it took to compute
-    return shared_multi_result,format_time
+#Jared Aguayo, Part 1 Lab1 Matrix Multiply
 
 #multiplies the 2 matrices by using for loops
 def matrixMulti(matrix1,matrix2):
@@ -99,7 +74,11 @@ def test():
     matrix2 = genMatrix(500,7)
 
     result,comp_time = matrixMulti(matrix1, matrix2)
-    print("Time to compute: Test 3 (Large matrices size 500, values 5 and 7)", comp_time)
+    for i in range(15):
+        for j in range(15):
+            print(result[i][j], end = " ")
+            
+    print("\nTime to compute: Test 3 (Large matrices size 500, values 5 and 7)", comp_time)
 
     matrix1 = genMatrix(20,5)
     matrix2 = genMatrix(20,7)
@@ -108,15 +87,7 @@ def test():
     for r in result:
         print(r)
     print("Time to compute: Test 4 (Large matrices size 20, values 5 and 7)", comp_time)
-    
+
 if __name__ == '__main__':
-    #test()
-
-    matrix1 = genMatrix(20,5)
-    matrix2 = genMatrix(20,5)
-
-    result,comp_time = matrixMultiParallel(matrix1, matrix2)
-
-    for r in result:
-        print(r)
-    print(comp_time)
+    test()
+    
